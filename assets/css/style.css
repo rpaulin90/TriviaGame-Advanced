@@ -1,0 +1,32 @@
+
+.answerChoice {
+
+	border: 1px solid black;
+	margin: 0 20px 10px 20px;
+
+}
+
+#timer {
+
+	margin:20px;
+
+}
+
+.top {
+
+	margin: 20px;
+
+}
+
+.middle {
+
+	margin: 20px;
+
+}
+
+body {
+
+	background-image: url("http://bluebison.net/backgrounds/2008/0808/olympic-swimming-1024.jpg");
+	background-repeat: no-repeat;
+	background-position: center top;
+}

@@ -1,7 +1,7 @@
 
 //both time variables are in seconds. We need to multiply by 1000 as JS uses milliseconds
 
-var timeToAnswer = 5;
+var timeToAnswer = 500;
 
 var timeInterval;
 
@@ -10,6 +10,12 @@ var rightAnswers = 0;
 var wrongAnswers = 0;
 
 var unAnswered = 0;
+
+var updateProgress = function(){
+	$(".progress-bar").attr("aria-valuenow",((counter)/(questionsAndAnswers.length))*100);
+	$(".progress-bar").css("width",$(".progress-bar").attr("aria-valuenow") + "%");
+	$(".sr-only").html($(".progress-bar").attr("aria-valuenow") + "% Complete");
+}
 
 var thatIsCorrect = function(that){
 	if($(that).attr("code") === node.correctAnswer){
@@ -23,13 +29,13 @@ var thatIsIncorrect = function(that){
 	if($(that).attr("code") !== node.correctAnswer){
 		wrongAnswers++;
 		$(".top").html("Incorrect!");
-		$(".middle").html("the answer is " + node.correctAnswerPath());
+		$(".middle").html("the answer is <strong>" + node.correctAnswerPath() + "</strong>");
 	}
 }
 
 var thatIsUnanswered = function(){
 		$(".top").html("You ran out of time!");
-		$(".middle").html("the answer was " + node.correctAnswerPath());
+		$(".middle").html("the answer is <strong>" + node.correctAnswerPath() + "</strong>");
 }
 
 var getTimeRemaining = function(deadline){
@@ -159,13 +165,15 @@ var createQA = function(){
 		//create a div for every possible answer
 		var possibleAnswer = $("<a href='#'>");
 		possibleAnswer.addClass("answerChoice");
-		possibleAnswer.addClass("col-xs-6");
+		possibleAnswer.addClass("btn");
+		possibleAnswer.attr("role","button");
 		possibleAnswer.attr("code",node.answerCodes[y]);
 		//fill each div with its corresponding text
 		possibleAnswer.html(node.answers[y]);
 		//append the newly created div to the middle section of the static html
 		$(".middle").append(possibleAnswer);
 	}
+	updateProgress();
 	startTimer("#timer", deadlineToAnswer);
 }
 
@@ -173,12 +181,16 @@ var endOfQuiz = function(){
 	clearInterval(timeInterval);
 	//create divs to show results
 	setTimeout(function showResults(){
-		var numberOfCorrect = $("<div class='clearBoth'>");
-		var numberOfInorrect = $("<div class='clearBoth'>");
-		var numberOfUnanswered = $("<div class='clearBoth'>");
-		numberOfCorrect.html("Correct Answers: " + rightAnswers);
-		numberOfInorrect.html("Incorrect Answers: " + wrongAnswers);
-		numberOfUnanswered.html("Unanswered Questions: " + unAnswered)
+		var numberOfCorrect = $("<div class='btn'>");
+		var numberOfInorrect = $("<div class='btn'>");
+		var numberOfUnanswered = $("<div class='btn'>");
+		numberOfCorrect.html("Correct Answers: <span class='badge'>" + rightAnswers + "</span>");
+		numberOfInorrect.html("Incorrect Answers: <span class='badge'>" + wrongAnswers) + "</span>";
+		numberOfUnanswered.html("Unanswered Questions: <span class='badge'>" + unAnswered + "</span>")
+
+		$(".progress-bar").attr("aria-valuenow","100");
+		$(".progress-bar").css("width","100%");
+		$(".sr-only").html($(".progress-bar").attr("aria-valuenow"));
 
 		$(".top").html("That is all! your results are displayed below");
 		$("#timer").empty();
